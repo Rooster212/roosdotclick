@@ -28,6 +28,5 @@ title = "Hugo Blog"
     weight = 3
 
 [params]
-  containerMaxWidth = "700px"
   dateFormat = "Jan 2, 2006"
   homeText = "You just made a Hugo blog from scratch."
