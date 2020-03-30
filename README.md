@@ -1,4 +1,4 @@
-# Make a Hugo blog from scratch
+# JamieRoos.dev
 
 Thanks to zwbetz for an [awesome tutorial](https://zwbetz.com/make-a-hugo-blog-from-scratch/) which was very helpful!
 

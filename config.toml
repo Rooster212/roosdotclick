@@ -4,7 +4,7 @@ title = "Hugo Blog"
 
 [taxonomies]
   tag = "tags"
-
+  
 [permalinks]
   blog = "/:filename/"
 
@@ -22,9 +22,9 @@ title = "Hugo Blog"
     url = "/blog/"
     weight = 2
   [[menu.main]]
-    name = "Tags"
-    pre = "tag"
-    url = "/tags/"
+    name = "Photography"
+    pre = "camera"
+    url = "/photography/"
     weight = 3
 
 [params]
