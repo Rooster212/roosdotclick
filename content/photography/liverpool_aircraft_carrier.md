@@ -24,4 +24,7 @@ Using the zoom lens on my phone gave me some great detail on the bridge section:
 
 This one was interesting - I took an ultra slow motion video - it's taken at 1920x1080 resolution but it's 240 frames per second.
 
-{{< video mp4source="https://i.rooster212.com/liv_aircraft/SlowMo_Flypast_converted.mp4" >}}
+{{< video 
+        mp4source="https://i.rooster212.com/liv_aircraft/SlowMo_Flypast_web.mp4" 
+        webmsource="https://i.rooster212.com/liv_aircraft/SlowMo_Flypast.webm"
+         oggsource="https://i.rooster212.com/liv_aircraft/SlowMo_Flypast.ogv" >}}

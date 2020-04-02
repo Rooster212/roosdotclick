@@ -1,7 +1,7 @@
 {{ if .IsNamedParams }}
-<video crossorigin anonymous controls>
-    {{ if .Get "mp4source" }} <source src="{{ .Get "mp4source" }}" type="video/mp4"> {{ end }}
+<video class="w-100" controls>
     {{ if .Get "webmsource" }} <source src="{{ .Get "webmsource" }}" type="video/webm"> {{ end }}
+    {{ if .Get "mp4source" }} <source src="{{ .Get "mp4source" }}" type="video/mp4"> {{ end }}
     {{ if .Get "oggsource" }} <source src="{{ .Get "oggsource" }}" type="video/ogg"> {{ end }}
     Sorry, your browser doesn't support embedded videos.
 </video>
