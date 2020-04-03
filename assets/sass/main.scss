@@ -1,5 +1,9 @@
 @import "bootstrap/bootstrap";
 
+body {
+  background: rgb(29, 29, 29);
+}
+
 @mixin feather-defaults($size) {
   width: $size;
   height: $size;
