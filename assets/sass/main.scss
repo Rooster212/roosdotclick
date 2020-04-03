@@ -1,7 +1,9 @@
 @import "bootstrap/bootstrap";
+@import "variables";
 
 body {
-  background: rgb(29, 29, 29);
+  background-color: var(--background-colour);
+  color: var(--foreground-colour);
 }
 
 @mixin feather-defaults($size) {
@@ -25,10 +27,14 @@ body {
 #nav a {
   font-weight: bold;
   color: inherit;
+
+  svg {
+    margin-bottom: 3px;
+  }
 }
 
 #nav-border {
-  border-bottom: 1px solid #212529;
+  border-bottom: 1px solid var(--foreground-colour);
 }
 
 #main {

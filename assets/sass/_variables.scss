@@ -1,0 +1,18 @@
+$light-mode-background: #FFF;
+$light-mode-foreground: #000;
+
+$dark-mode-background: rgb(34, 34, 34);
+$dark-mode-foreground: rgb(182, 182, 182);
+
+:root {
+    --background-colour: #{$dark-mode-background};
+    --foreground-colour: #{$dark-mode-foreground};
+}
+
+@media screen and (prefers-color-scheme: light) {
+    :root {
+        --background-colour: #{$light-mode-background};
+        --foreground-colour: #{$light-mode-foreground};
+    }
+    
+};
