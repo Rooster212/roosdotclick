@@ -3,9 +3,6 @@ image: node:13.12
 variables:
   HUGO_DOWNLOAD: https://github.com/gohugoio/hugo/releases/download/v0.68.3/hugo_0.68.3_Linux-64bit.tar.gz
 
-stages:
-- build
-
 build:
   before_script:
   - apt update && apt install wget -y
