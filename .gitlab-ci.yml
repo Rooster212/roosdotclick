@@ -3,14 +3,18 @@ image: node:13.12-slim
 variables:
   HUGO_DOWNLOAD: https://github.com/gohugoio/hugo/releases/download/v0.68.3/hugo_extended_0.68.3_Linux-64bit.tar.gz
 
+stages:
+- build
+
 build:
+  stage: build
   before_script:
-  - apt update && apt install wget -y
-  - wget -O hugo.tar.gz ${HUGO_DOWNLOAD}
+  - apt update && apt install wget git -y
+  - wget -q -O hugo.tar.gz ${HUGO_DOWNLOAD}
   - tar -zxvf hugo.tar.gz hugo
   - cp hugo /usr/local/bin/
   script:
-  - npm install --no-fund
+  - npm install --silent --no-fund
   - hugo --minify
   artifacts:
     paths:
