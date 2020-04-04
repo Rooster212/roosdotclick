@@ -4,6 +4,7 @@
   "description": "",
   "main": "postcss.config.js",
   "dependencies": {
+    "@fullhuman/postcss-purgecss": "github:fullhuman/postcss-purgecss",
     "autoprefixer": "^9.7.5",
     "bootstrap": "^4.4.1",
     "postcss": "^7.0.27",
