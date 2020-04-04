@@ -1,4 +1,4 @@
 {{ $sass := resources.Get "sass/main.scss" }}
-{{ $style := $sass | resources.ToCSS | resources.PostCSS (dict "config" "postcss.config.js") }}
+{{ $style := $sass | resources.ToCSS }}
 
 <link rel="stylesheet" href="{{ $style.Permalink }}">

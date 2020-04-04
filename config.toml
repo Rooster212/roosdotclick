@@ -1,12 +1,9 @@
-baseURL = "https://example.com"
-languageCode = "en-us"
-title = "JR"
+baseURL = "https://roos.click"
+languageCode = "en-uk"
+title = "Roos.click"
 
 [taxonomies]
   tag = "tags"
-  
-[permalinks]
-  blog = "/:filename/"
 
 # See https://feathericons.com/
 # The value of pre is the icon name
@@ -29,4 +26,4 @@ title = "JR"
 
 [params]
   dateFormat = "Jan 2, 2006"
-  homeText = "You just made a Hugo blog from scratch."
+  homeText = "Checkout the Blog and Photography sections above, or see the source code [here](https://gitlab.com/Rooster212/roosdotclick). There's more to come."

@@ -17,7 +17,8 @@ body {
 }
 
 .feather {
-  @include feather-defaults(20px);
+  @include feather-defaults($feather-size);
+  margin-bottom: $feather-margin-bottom;
 }
 
 .container {
@@ -50,25 +51,23 @@ body {
   font-size: 125%;
 }
 
-.tag-btn {
-  $side-padding: 12px;
+$side-padding: 4px;
 
+.list-posted-time {
+  padding-left: $side-padding;
+}
+
+.tag-btn {
   margin-bottom: 0.3em;
   padding-right: $side-padding;
   padding-left: $side-padding;
   text-transform: uppercase;
   font-weight: bold;
+
+  background-color: var(--background-colour);
+  color: var(--foreground-colour);
 }
 
 img {
   max-width: 100%;
-}
-
-@media screen and (prefers-color-scheme: dark) {
-  .tag-btn {
-    $dark-mode-btn-colour: #8e8e8e;
-
-    border-color: $dark-mode-btn-colour;
-    color: $dark-mode-btn-colour;
-  }
 }

@@ -4,6 +4,11 @@ $light-mode-foreground: #000;
 $dark-mode-background: rgb(34, 34, 34);
 $dark-mode-foreground: rgb(182, 182, 182);
 
+$feather-size: 18px;
+$feather-margin-bottom: 2px;
+
+$font-family-monospace: 'JetBrains Mono', 'Fira Code', 'Lucida Console', Courier, monospace;
+
 :root {
     --background-colour: #{$dark-mode-background};
     --foreground-colour: #{$dark-mode-foreground};
