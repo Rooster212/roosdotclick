@@ -17,7 +17,7 @@ body {
 }
 
 .feather {
-  @include feather-defaults(16px);
+  @include feather-defaults(20px);
 }
 
 .container {
@@ -51,9 +51,24 @@ body {
 }
 
 .tag-btn {
+  $side-padding: 12px;
+
   margin-bottom: 0.3em;
+  padding-right: $side-padding;
+  padding-left: $side-padding;
+  text-transform: uppercase;
+  font-weight: bold;
 }
 
 img {
   max-width: 100%;
+}
+
+@media screen and (prefers-color-scheme: dark) {
+  .tag-btn {
+    $dark-mode-btn-colour: #8e8e8e;
+
+    border-color: $dark-mode-btn-colour;
+    color: $dark-mode-btn-colour;
+  }
 }
