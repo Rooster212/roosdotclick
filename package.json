@@ -1,0 +1,26 @@
+{
+  "name": "roosdotclick",
+  "version": "1.0.0",
+  "description": "",
+  "main": "postcss.config.js",
+  "dependencies": {
+    "autoprefixer": "^9.7.5",
+    "postcss": "^7.0.27",
+    "purgecss": "^2.1.0"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "server": "hugo server -D",
+    "build": "hugo"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@gitlab.com/Rooster212/roosdotclick.git"
+  },
+  "author": "",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://gitlab.com/Rooster212/roosdotclick/issues"
+  },
+  "homepage": "https://gitlab.com/Rooster212/roosdotclick#readme"
+}
