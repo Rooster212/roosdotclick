@@ -1,7 +1,7 @@
-image: node:13.12
+image: node:13.12-slim
 
 variables:
-  HUGO_DOWNLOAD: https://github.com/gohugoio/hugo/releases/download/v0.68.3/hugo_0.68.3_Linux-64bit.tar.gz
+  HUGO_DOWNLOAD: https://github.com/gohugoio/hugo/releases/download/v0.68.3/hugo_extended_0.68.3_Linux-64bit.tar.gz
 
 build:
   before_script:
@@ -10,8 +10,8 @@ build:
   - tar -zxvf hugo.tar.gz hugo
   - cp hugo /usr/local/bin/
   script:
-  - npm install
-  - hugo
+  - npm install --no-fund
+  - hugo --minify
   artifacts:
     paths:
     - public/
