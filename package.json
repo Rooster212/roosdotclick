@@ -5,6 +5,7 @@
   "main": "postcss.config.js",
   "dependencies": {
     "autoprefixer": "^9.7.5",
+    "bootstrap": "^4.4.1",
     "postcss": "^7.0.27",
     "purgecss": "^2.1.0"
   },
