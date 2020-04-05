@@ -4,8 +4,7 @@ variables:
   HUGO_DOWNLOAD: https://github.com/gohugoio/hugo/releases/download/v0.68.3/hugo_extended_0.68.3_Linux-64bit.tar.gz
   CONTAINER_IMAGE_NAME: roosdotclick
   REGISTRY: registry.gitlab.com
-  CONTAINER_RELEASE_IMAGE: $REGISTRY/rooster212/roosdotclick/$CONTAINER_IMAGE_NAME:latest
-  CONTAINER_TAGGED_IMAGE: $REGISTRY/rooster212/roosdotclick/$CONTAINER_IMAGE_NAME:$CI_COMMIT_TAG
+  CONTAINER_IMAGE: $REGISTRY/rooster212/roosdotclick/$CONTAINER_IMAGE_NAME:latest
   DOCKER_DRIVER: overlay2
   DOCKER_HOST: tcp://docker:2375
   DOCKER_TLS_CERTDIR: "" # https://gitlab.com/gitlab-org/gitlab-ce/issues/64959
@@ -13,8 +12,6 @@ variables:
 stages:
 - build
 - docker
-- docker-release
-- docker-tag
 
 build:
   stage: build
@@ -34,45 +31,20 @@ build:
   tags:
   - docker
 
-.before_docker_template: &before_docker
+docker-build:
+  stage: docker
   services:
   - name: docker:19.03-dind
     entrypoint: ["env", "-u", "DOCKER_HOST"]
     command: ["dockerd-entrypoint.sh"]
   before_script:
   - docker login -u gitlab-ci-token -p $CI_JOB_TOKEN registry.gitlab.com
-  tags:
-  - docker
-
-docker-build:
-  stage: docker
-  <<: *before_docker
   dependencies:
   - build
   script:
-  - docker build -t $CONTAINER_TEST_IMAGE .
-  - docker push $CONTAINER_TEST_IMAGE
-
-docker-release:
-  stage: docker-release
-  <<: *before_docker
-  script:
-  - docker pull $CONTAINER_TEST_IMAGE
-  - docker tag $CONTAINER_TEST_IMAGE $CONTAINER_RELEASE_IMAGE
-  - docker push $CONTAINER_RELEASE_IMAGE
-  dependencies:
-  - docker-build
+  - docker build -t $CONTAINER_IMAGE .
+  - docker push $CONTAINER_IMAGE
   only:
   - master
-
-docker-tag:
-  stage: docker-tag
-  only:
-  - tags
-  <<: *before_docker
-  script:
-  - docker pull $CONTAINER_TEST_IMAGE
-  - docker tag $CONTAINER_TEST_IMAGE $CONTAINER_TAGGED_IMAGE
-  - docker push $CONTAINER_TAGGED_IMAGE
-  dependencies:
-  - docker-build
+  tags:
+  - docker
