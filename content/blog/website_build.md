@@ -1,7 +1,7 @@
 ---
 title: "Website Build"
 date: 2020-04-04T13:30:00Z
-tags: ["tech","coding"]
+tags: ["tech","coding","blog"]
 draft: false
 ---
 
