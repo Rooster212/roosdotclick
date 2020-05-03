@@ -26,4 +26,4 @@ title = "Roos.click"
 
 [params]
   dateFormat = "Jan 2, 2006"
-  homeText = "Checkout the Blog and Photography sections above, or see the source code [here](https://gitlab.com/Rooster212/roosdotclick). There's more to come."
+  homeText = "I'm Jamie Roos, I'm a developer currently based in Manchester. I've got experience working for many companies, and I enjoy development outside of work time as well. This website is [open source here](https://gitlab.com/Rooster212/roosdotclick)."
