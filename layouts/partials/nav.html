@@ -1,8 +1,8 @@
-<div id="nav-border" class="container">
-  <nav id="nav" class="nav justify-content-center">
+<nav id="nav" class="rc-nav">
+  <a href="/"><img src="/android-chrome-512x512.png"/></a>
   {{ range .Site.Menus.main }}
     {{ $text := print " " .Name | safeHTML }}
-    <a class="nav-link" href="{{ .URL }}">{{ partialCached "feather.html" .Pre .Pre }} {{ $text }}</a>
+    <a href="{{ .URL }}">{{ partialCached "feather.html" .Pre .Pre }} {{ $text }}</a>
   {{ end }}
-  </nav>
-</div>
+  {{ partial "social.html" }}
+</nav>

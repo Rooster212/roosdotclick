@@ -1,3 +1,21 @@
+/* SCSS RGB */
+$russian-violet: rgba(12, 10, 62, 1);
+$patriarch: rgba(123, 30, 122, 1);
+$irresistible: rgba(179, 63, 98, 1);
+$tart-orange: rgba(249, 86, 79, 1);
+$gold-crayola: rgba(243, 198, 119, 1);
+
+/* SCSS Gradient */
+$gradient-top: linear-gradient(0deg, $russian-violet, $patriarch, $irresistible, $tart-orange, $gold-crayola);
+$gradient-right: linear-gradient(90deg, $russian-violet, $patriarch, $irresistible, $tart-orange, $gold-crayola);
+$gradient-bottom: linear-gradient(180deg, $russian-violet, $patriarch, $irresistible, $tart-orange, $gold-crayola);
+$gradient-left: linear-gradient(270deg, $russian-violet, $patriarch, $irresistible, $tart-orange, $gold-crayola);
+$gradient-top-right: linear-gradient(45deg, $russian-violet, $patriarch, $irresistible, $tart-orange, $gold-crayola);
+$gradient-bottom-right: linear-gradient(135deg, $russian-violet, $patriarch, $irresistible, $tart-orange, $gold-crayola);
+$gradient-top-left: linear-gradient(225deg, $russian-violet, $patriarch, $irresistible, $tart-orange, $gold-crayola);
+$gradient-bottom-left: linear-gradient(315deg, $russian-violet, $patriarch, $irresistible, $tart-orange, $gold-crayola);
+$gradient-radial: radial-gradient($russian-violet, $patriarch, $irresistible, $tart-orange, $gold-crayola);
+
 $light-mode-background: #FFF;
 $light-mode-foreground: #000;
 
@@ -9,14 +27,31 @@ $feather-margin-bottom: 2px;
 
 $font-family-monospace: 'JetBrains Mono', 'Fira Code', 'Lucida Console', Courier, monospace;
 
+$screen-breakpoint: 576px;
+
+$nav-padding: 20px;
+$side-padding: 4px;
+
+@mixin screen-s {
+    @media only screen and (max-width: $screen-breakpoint) { @content; }
+}
+
+@mixin screen-l {
+    @media only screen and (min-width: $screen-breakpoint) { @content; }
+}
+
 :root {
     --background-colour: #{$dark-mode-background};
     --foreground-colour: #{$dark-mode-foreground};
+    --secondary-colour: #{$tart-orange};
+    --tertiary-colour: #{$gold-crayola};
 }
 
-@media screen and (prefers-color-scheme: light) {
-    :root {
-        --background-colour: #{$light-mode-background};
-        --foreground-colour: #{$light-mode-foreground};
-    }
-};
+// @media screen and (prefers-color-scheme: light) {
+//     :root {
+//         --background-colour: #{$light-mode-background};
+//         --foreground-colour: #{$light-mode-foreground};
+//         --secondary-colour: #{$tart-orange};
+//         --tertiary-colour: #{$gold-crayola};
+//     }
+// };

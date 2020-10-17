@@ -1,6 +1,6 @@
 baseURL = "https://roos.click"
 languageCode = "en-uk"
-title = "Roos.click"
+title = "roos.click"
 
 [taxonomies]
   tag = "tags"
@@ -9,21 +9,17 @@ title = "Roos.click"
 # The value of pre is the icon name
 [menu]
   [[menu.main]]
-    name = "Home"
-    pre = "home"
-    url = "/"
-    weight = 1
-  [[menu.main]]
     name = "Blog"
     pre = "edit"
     url = "/blog/"
-    weight = 2
+    weight = 1
   [[menu.main]]
     name = "Photography"
     pre = "camera"
     url = "/photography/"
-    weight = 3
+    weight = 2
 
 [params]
   dateFormat = "Jan 2, 2006"
-  homeText = "I'm Jamie Roos, I'm a developer currently based in Manchester. I've got experience working for many companies, and I enjoy development outside of work time as well. This website is [open source here](https://gitlab.com/Rooster212/roosdotclick)."
+  homeText1 = "Hi, I'm Jamie, a Software Developer based in Manchester. I've got a wide range of experience across varied domains and using a multitude of different technologies."
+  homeText2 = "Currently I am working at [cinch](https://cinch.co.uk) in Manchester (well, remotely!) with a focus on Automation, Observability and all things AWS."
