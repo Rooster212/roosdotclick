@@ -22,7 +22,7 @@ build:
   - tar -zxvf hugo.tar.gz hugo
   - cp hugo /usr/local/bin/
   script:
-  - npm install --silent --no-fund
+  - npm ci
   - hugo --minify
   artifacts:
     paths:

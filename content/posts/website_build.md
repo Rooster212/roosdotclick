@@ -1,7 +1,7 @@
 ---
-title: "Website Build"
+title: "Website Build - Part 1"
 date: 2020-04-04T13:30:00Z
-tags: ["tech","coding","blog"]
+tags: ["tech","coding"]
 draft: false
 ---
 

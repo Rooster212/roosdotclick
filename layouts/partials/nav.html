@@ -1,8 +1,0 @@
-<nav id="nav" class="rc-nav">
-  <a href="/"><img src="/android-chrome-512x512.png"/></a>
-  {{ range .Site.Menus.main }}
-    {{ $text := print " " .Name | safeHTML }}
-    <a href="{{ .URL }}">{{ partialCached "feather.html" .Pre .Pre }} {{ $text }}</a>
-  {{ end }}
-  {{ partial "social.html" }}
-</nav>

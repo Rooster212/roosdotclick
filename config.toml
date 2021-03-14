@@ -1,25 +1,71 @@
-baseURL = "https://roos.click"
+baseurl      = "https://roos.click"
+title        = "roos.click"
 languageCode = "en-uk"
-title = "roos.click"
-
-[taxonomies]
-  tag = "tags"
-
-# See https://feathericons.com/
-# The value of pre is the icon name
-[menu]
-  [[menu.main]]
-    name = "Blog"
-    pre = "edit"
-    url = "/blog/"
-    weight = 1
-  [[menu.main]]
-    name = "Photography"
-    pre = "camera"
-    url = "/photography/"
-    weight = 2
+theme        = "hello-friend-ng"
+paginate     = 20
 
 [params]
-  dateFormat = "Jan 2, 2006"
-  homeText1 = "Hi, I'm Jamie, a Software Developer based in Manchester. I've got a wide range of experience across varied domains and using a multitude of different technologies."
-  homeText2 = "Currently I am working at [cinch](https://cinch.co.uk) in Manchester (well, remotely!) with a focus on Automation, Observability and all things AWS."
+  dateform        = "Jan 2, 2006"
+  dateformShort   = "Jan 2"
+  dateformNum     = "2006-01-02"
+  dateformNumTime = "2006-01-02 15:04"
+
+  # Subtitle for home
+
+  homeSubtitle = "Tech lead at cinch. I like Self-hosting, AWS, Serverless framework, CDK. Sometimes I code too."
+
+  # Set disableReadOtherPosts to true in order to hide the links to other posts.
+  disableReadOtherPosts = true
+
+  # Enable sharing buttons, if you like
+  enableSharingButtons = false
+
+  # Metadata mostly used in document's head
+  description = "roos.click site and blog"
+  keywords = "homepage, blog"
+  images = [""]
+
+  [[params.social]]
+    name = "twitter"
+    url = "https://twitter.com/Rooster212"
+  [[params.social]]
+    name = "github"
+    url = "https://github.com/Rooster212"
+  [[params.social]]
+    name = "gitlab"
+    url = "https://gitlab.com/Rooster212"
+  [[params.social]]
+    name = "dev"
+    url = "https://dev.to/rooster212"
+  [[params.social]]
+    name = "linkedin"
+    url = "https://www.linkedin.com/in/rooster212/"
+  [[params.social]]
+    name = "stackoverflow"
+    url = "https://stackoverflow.com/users/1505511/rooster212?tab=profile"
+  [[params.social]]
+    name = "email"
+    url = "mailto:jamie@roos.click"
+
+[taxonomies]
+  category = "blog"
+  tag      = "tags"
+  series   = "series"
+
+[languages]
+  [languages.en]
+    title = "roos.click"
+    subtitle = ""
+    keywords = ""
+    copyright = 'Jamie Roos'
+    readOtherPosts = "Read other posts"
+
+    [languages.en.params.logo]
+      logoText = "roos.click"
+      logoHomeLink = "/"
+
+  # And you can even create generic menu
+  [[menu.main]]
+    identifier = "blog"
+    name       = "Blog"
+    url        = "/posts"
