@@ -107,11 +107,13 @@ In my case, I want to use VLAN 53 and set the IP of `192.168.53.11` for my first
 For me, this is my setup.
 
 ```bash
+# These lines were here already
 auto lo
 iface lo inet loopback
 
 iface eno1 inet manual
 
+# All new/modified stuff below here
 auto vmbr0.53
 iface vmbr0.53 inet static
         address 192.168.53.11/24
@@ -125,3 +127,5 @@ iface vmbr0 inet static
         bridge-vlan-aware yes
         bridge-vids 2-4094 # If I want to limit my VLANs, I could do 53 61 to limit to 53 and 61 for my VMs.
 ```
+
+Then, I rebooted the node.
