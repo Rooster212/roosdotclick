@@ -114,18 +114,25 @@ iface lo inet loopback
 iface eno1 inet manual
 
 # All new/modified stuff below here
-auto vmbr0.53
-iface vmbr0.53 inet static
+
+iface eno1.53 inet manual
+
+auto vmbr0v53
+iface vmbr0v53 inet static
         address 192.168.53.11/24
         gateway 192.168.53.1
-
-auto vmbr0
-iface vmbr0 inet static
-        bridge-ports eno1
+        bridge-ports eno1.53
         bridge-stp off
         bridge-fd 0
         bridge-vlan-aware yes
-        bridge-vids 2-4094 # If I want to limit my VLANs, I could do 53 61 to limit to 53 and 61 for my VMs.
+        # If I want to limit VLANs, I can use the line below.
+        # bridge-vids 2-4094
 ```
 
 Then, I rebooted the node.
+
+## Fixing the cluster
+
+As a noob, I set my IPs up after I clustered. **This was a mistake**. Do it after.
+
+If you're like me and need to fix it, I had to do a bit of research and tried a couple of things but none of it worked for me. You might have better luck but I ended up starting over on the nodes I'd already setup.
