@@ -1,6 +1,6 @@
 ---
 title: "Self Hosting Journey using Proxmox Part 1 - Starting Off"
-date: 2021-08-08T22:37:49+01:00
+date: 2021-08-11T22:37:49+01:00
 tags: ["tech", "self hosting", "docker"]
 draft: false
 ---
@@ -11,11 +11,11 @@ So I've been wanting to expand my home server hosting capabilities. I've got a l
 * I run [Owncloud](https://owncloud.com/) so I can have my own 'Dropbox' at home (with terabytes of storage!)
 * [Tautulli](https://tautulli.com/) which is a monitor for my Plex server.
 
-So to that end... I bought a job lot of mini PCs off eBay. I was partially inspired by the ServeTheHome Project TinyMiniMicro series (one of their excellent articles is [here](https://www.servethehome.com/lenovo-thinkcentre-m720q-tinyminimicro-feature/)), as well as some YouTubers experience with Raspberry Pi clusters. I thought about picking up one of the Raspberry Pi racks available (for 4-5 Pis) but at the end of the day, I feel I need more power than is available in your standard Raspberry Pi.
+So to that end... I bought a job lot of mini PCs off eBay. I was partially inspired by the ServeTheHome Project TinyMiniMicro series (one of their excellent articles is [here](https://www.servethehome.com/lenovo-thinkcentre-m720q-tinyminimicro-feature/)), as well as some YouTubers experience with Raspberry Pi clusters. I thought about picking up one of the Raspberry Pi racks available for 4-5 Pis (I had my eye on [this one](https://thepihut.com/products/uctronics-pi-rack-1u-poe-rackmount-for-raspberry-4) for a while...) but at the end of the day, I feel I need more power than is available in your standard Raspberry Pi.
 
-A few reasons for this choice really. I feel SD cards don't really cut the mustard when it comes to self hosting a lot of my services. I know you can run SSDs or flash drives on a Pi but, once you factor in everything needed to run something like that, the overall cost is quite high. The only thing that did appeal was using a load of [PoE+ HATs with Pis](https://thepihut.com/products/raspberry-pi-poe-plus-hat) (as I have a powerful PoE+ switch!) but the price just adds up for multiple nodes.
+A few reasons for this choice really. I feel SD cards don't really cut the mustard when it comes to self hosting a lot of my services. I know you can run SSDs or flash drives on a Pi but, once you factor in everything needed to run something like that, the overall cost is quite high. The only thing that did appeal was using a load of [PoE+ HATs with Pis](https://thepihut.com/products/raspberry-pi-poe-plus-hat) (as I have a powerful PoE+ switch!) but the price _really_ adds up for multiple nodes.
 
-For me, I purchased a job lot of 5 HP Elitedesk 800 G2 Mini computers. These have clearly been pulled from an office or something like that, but they are in decent shape and came with 256GB SSDs (from the SMART data they are quite heavily used, but that's OK) and 8GB of RAM each, as well as Core i3 6100T CPUs. These are not super powerful by any means, but this does mean that these servers will sip a lot less power than the average PC. The power brick is rated at 35W but I highly doubt these will use anywhere near that under normal usage.
+For me, I purchased a job lot of 5 HP Elitedesk 800 G2 Mini computers. These have clearly been pulled from an office or something like that, but they are in decent shape and came with 256GB SSDs (from the SMART data they are quite heavily used, but that's OK) and 8GB of RAM each, as well as Core i3 6100T CPUs. These are not super powerful by any means, but this does mean that these servers will sip a lot less power than the average PC. The power brick is rated at 35W but I highly doubt these will use anywhere near that under normal usage. I also have the option of adding NVMe SSDs.
 
 # Initial machines setup
 
@@ -28,9 +28,86 @@ Proxmox is super easy to install. I basically downloaded the ISO from the websit
 Why Proxmox?
 * Central management! All browser based and 'datacenter' level management. (Over ESXi, which I have previous experience with, which doesn't have free clustering)
 * Keeping things up and running! This is especially important for my Omada controller and CCTV host.
-* Flexiblity - I like the ability to create VMs. My current setup is a few VMs on a Windows machine under HyperV, but it's not a 'server' at the end of the day and has the usual Windows 10 issues like rebooting at random times. Use Linux for servers, always...!
+* Flexiblity - I like the ability to create VMs. My current setup is a few VMs on a Windows machine under HyperV, but it's not a 'server' at the end of the day and has the usual Windows 10 issues like rebooting at random times. Use Linux for servers, _pretty much_ always. There are exceptions of course, but for the vast majority of things I'd always be a linux server guy.
 
 Once you are installed, it's easy enough to get sorted.
+
+# IP and Networking
+
+## VLANs
+
+For me, I want to put my servers onto a separate VLAN and subnet.
+
+Proxmox makes that pretty simple for VM aware VLANs. If that's all you want then you can just go to our Network bridge (which is linked to my sole Network device in this case)
+
+{{< figure src="/content/self_hosting/proxmox_network_tab.png" caption="Network tab" >}}
+
+and tick the VLAN aware box. This will allow us to use VLANs in our VM setups.
+
+{{< figure src="/content/self_hosting/proxmox_network_tab.png" caption="VLAN aware setting" >}}
+
+Then, in your VM, you can set a VLAN tag in the Network device:
+
+{{< figure src="/content/self_hosting/proxmox_vm_network.png" caption="VLANs" >}}
+
+## Change the host IP address and set a VLAN for the host
+
+For my uses however, I wanted to use a VLAN and put my Proxmox **hosts** in the VLAN (as well as the servers), and subnet.
+
+In my Omada SDN Gateway, I setup a VLAN - I chose 53. (53 looks like SE, the first 2 letters of `server`!)
+
+Then in the shell (which can be scary!) we need to take a backup of the existing network interface file, then modify it.
+
+So I copied the interfaces file to a safe place to back it up (actually after a reboot these disappeared so maybe pick somewhere else...):
+
+```bash
+cp /etc/network/interfaces /root/networkinterfaces.bak
+```
+
+Then, we open the `/etc/network/interfaces` file in `nano` (I'm still using `root` so no `sudo` needed).
+
+```bash
+nano /etc/network/interfaces
+```
+
+In my case, I want to use VLAN 53 and set the IP of `192.168.53.11` for my first Proxmox host. (I'll use 12 and 13 respectively for hosts 2 and 3).
+
+For me, this is my setup.
+
+```bash
+# These lines were here already
+auto lo
+iface lo inet loopback
+
+iface eno1 inet manual
+
+# All new/modified stuff below here
+
+iface eno1.53 inet manual # The .53 is the VLAN ID
+
+auto vmbr0v53
+iface vmbr0v53 inet static
+        address 192.168.53.11/24
+        gateway 192.168.53.1
+        bridge-ports eno1.53
+        bridge-stp off
+        bridge-fd 0
+        bridge-vlan-aware yes
+        # If I want to limit VLANs, I can use the line below.
+        # bridge-vids 2-4094
+```
+
+Then, I rebooted the node. I did have to iterate and try a few bits and pieces. [The Proxmox docs on VLANs](https://pve.proxmox.com/wiki/Network_Configuration#_vlan_802_1q) weren't that great unfortunately, I didn't find they worked. I'm no expert in this area but some trial and error got me sorted.
+
+## Fixing the cluster
+
+The first time I did this, I set my IPs up after I clustered. **This was a mistake**. Do it after.
+
+If you're like me and need to fix it, I had to do a bit of research and tried a couple of things but none of it worked for me. You might have better luck but I ended up reinstalling from scratch on the nodes I'd already setup. So that's that. Onto the more interesting bits...
+
+## Updates
+
+`TODO: how to setup updates`
 
 ## Datacenter setup
 
@@ -58,81 +135,6 @@ lvresize -l +100%FREE /dev/pve/root
 resize2fs /dev/mapper/pve-root
 ```
 
-Then you need to go back to your storage settings and allow for Disk images at least (so you can run VMs!) and you might want to store ISO images (probably temporarily)
+Then you need to go back to your storage settings and allow for Disk images at least (so you can run VMs!) and you might want to store ISO images (probably temporarily, ideally you'd want to store them on a remote server)
 
 {{< figure src="/content/self_hosting/proxmox_storage_options.png" caption="Storage options" >}}
-
-# IP and Networking
-
-## Allow guest VLANs
-
-For me, I want to put my servers onto a separate VLAN and subnet.
-
-Proxmox makes that pretty simple luckily. 
-
-All we need to do is go to our Network bridge (which is linked to my sole Network device in this case)
-
-{{< figure src="/content/self_hosting/proxmox_network_tab.png" caption="Network tab" >}}
-
-and tick the VLAN aware box. This will allow us to use VLANs in our VM setups.
-
-{{< figure src="/content/self_hosting/proxmox_network_tab.png" caption="VLAN aware setting" >}}
-
-Then, in your VM, you can set a VLAN tag in the Network device:
-
-{{< figure src="/content/self_hosting/proxmox_vm_network.png" caption="VLANs" >}}
-
-## Change the host IP address and set a VLAN for the host
-
-For me, I wanted to use a VLAN and put my Proxmox hosts in that VLAN, and subnet.
-
-In my Omada SDN Gateway, I setup a VLAN - I chose 53.
-
-Then in the shell (which can be scary!) we need to take a backup of the existing network interface file, then modify it.
-
-So I copied the interfaces file to a safe place to back it up:
-
-```bash
-cp /etc/network/interfaces /root/networkinterfaces.bak
-```
-
-Then, we open the `/etc/network/interfaces` file in `nano` (I'm still using `root` so no `sudo` needed).
-
-```bash
-nano /etc/network/interfaces
-```
-
-In my case, I want to use VLAN 53 and set the IP of `192.168.53.11` for my first Proxmox host. (I'll use 12 and 13 respectively for hosts 2 and 3).
-
-For me, this is my setup.
-
-```bash
-# These lines were here already
-auto lo
-iface lo inet loopback
-
-iface eno1 inet manual
-
-# All new/modified stuff below here
-
-iface eno1.53 inet manual
-
-auto vmbr0v53
-iface vmbr0v53 inet static
-        address 192.168.53.11/24
-        gateway 192.168.53.1
-        bridge-ports eno1.53
-        bridge-stp off
-        bridge-fd 0
-        bridge-vlan-aware yes
-        # If I want to limit VLANs, I can use the line below.
-        # bridge-vids 2-4094
-```
-
-Then, I rebooted the node.
-
-## Fixing the cluster
-
-As a noob, I set my IPs up after I clustered. **This was a mistake**. Do it after.
-
-If you're like me and need to fix it, I had to do a bit of research and tried a couple of things but none of it worked for me. You might have better luck but I ended up starting over on the nodes I'd already setup.
