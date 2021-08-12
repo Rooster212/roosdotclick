@@ -107,7 +107,29 @@ If you're like me and need to fix it, I had to do a bit of research and tried a 
 
 ## Updates
 
-`TODO: how to setup updates`
+I copied [this guide](https://www.caretech.io/2018/06/08/how-to-update-proxmox-without-buying-a-subscription/) on setting up the non-enterprise update repo for Proxmox.
+
+Long story short:
+
+Make a copy of the Proxmox enterprise list and call it `pve-no-subscription.list`:
+```bash
+cp /etc/apt/sources.list.d/pve-enterprise.list /etc/apt/sources.list.d/pve-no-subscription.list
+```
+
+In the original PVE Enterprise list, go in and comment out the line. This means you can enable the enterprise repository easily if you need or want to, but you can modify the new file freely.
+
+In the new file, replace the enterprise deb source with the new line (although, take note of if your version says `buster`, `bullseye`, `stretch` - your version should match the enterprise one)
+```
+deb http://download.proxmox.com/debian/pve buster pve-no-subscription
+```
+
+After that, you should be able to run:
+```
+apt-get update
+apt-get dist-upgrade
+```
+
+Interestingly, I normally run `apt-get upgrade` over `dist-upgrade` - but it makes a lot of sense reading the notes that running `dist-upgrade` would make sense, as it seems to install dependencies in a smarter way. So I'll give that a go for sure.
 
 ## Datacenter setup
 
