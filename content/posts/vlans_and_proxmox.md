@@ -160,3 +160,7 @@ resize2fs /dev/mapper/pve-root
 Then you need to go back to your storage settings and allow for Disk images at least (so you can run VMs!) and you might want to store ISO images (probably temporarily, ideally you'd want to store them on a remote server)
 
 {{< figure src="/content/self_hosting/proxmox_storage_options.png" caption="Storage options" >}}
+
+## Conclusion
+
+I've got a lot more plans for my cluster. PiHole is likely my next one to tackle, as the first thing to migrate away from my existing HyperV setup.
