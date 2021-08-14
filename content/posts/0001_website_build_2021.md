@@ -2,6 +2,7 @@
 title: "roos.click - the why, the how"
 date: 2021-08-08T17:30:00Z
 tags: ["tech","coding"]
+slug: 'roos-click-why-and-how'
 draft: false
 ---
 

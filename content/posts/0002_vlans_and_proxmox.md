@@ -1,7 +1,8 @@
 ---
 title: "Self Hosting Journey using Proxmox Part 1 - Starting Off"
 date: 2021-08-11T22:37:49+01:00
-tags: ["tech", "self hosting", "docker"]
+slug: 'proxmox-part-1-starting-off'
+tags: ["tech", "self hosting", "proxmox"]
 draft: false
 ---
 
@@ -99,6 +100,12 @@ iface vmbr0v53 inet static
 
 Then, I rebooted the node. I did have to iterate and try a few bits and pieces. [The Proxmox docs on VLANs](https://pve.proxmox.com/wiki/Network_Configuration#_vlan_802_1q) weren't that great unfortunately, I didn't find they worked. I'm no expert in this area but some trial and error got me sorted.
 
+Then you need to update the hostname - this can be done by editing the contents of the `/etc/hosts` file and changing the IP of your node/hostname lookup.
+
+I also updated my DNS servers to point at my 2 PiHole servers (1 virtual, 1 on an old Pi). This can be done via the UI
+
+{{< figure src="/content/self_hosting/proxmox_dns.png" caption="DNS Servers" >}}
+
 ## Fixing the cluster
 
 The first time I did this, I set my IPs up after I clustered. **This was a mistake**. Do it after.
@@ -120,7 +127,7 @@ In the original PVE Enterprise list, go in and comment out the line. This means 
 
 In the new file, replace the enterprise deb source with the new line (although, take note of if your version says `buster`, `bullseye`, `stretch` - your version should match the enterprise one)
 ```
-deb http://download.proxmox.com/debian/pve buster pve-no-subscription
+deb http://download.proxmox.com/debian/pve bullseye pve-no-subscription
 ```
 
 After that, you should be able to run:
