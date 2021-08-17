@@ -35,25 +35,11 @@ Once you are installed, it's easy enough to get sorted.
 
 # IP and Networking
 
-## VLANs
-
-For me, I want to put my servers onto a separate VLAN and subnet.
-
-Proxmox makes that pretty simple for VM aware VLANs. If that's all you want then you can just go to our Network bridge (which is linked to my sole Network device in this case)
-
-{{< figure src="/content/self_hosting/proxmox_network_tab.png" caption="Network tab" >}}
-
-and tick the VLAN aware box. This will allow us to use VLANs in our VM setups.
-
-{{< figure src="/content/self_hosting/proxmox_network_tab.png" caption="VLAN aware setting" >}}
-
-Then, in your VM, you can set a VLAN tag in the Network device:
-
-{{< figure src="/content/self_hosting/proxmox_vm_network.png" caption="VLANs" >}}
-
-## Change the host IP address and set a VLAN for the host
+## Change the host IP address and set a VLAN for the host with Tagged VLANs
 
 For my uses however, I wanted to use a VLAN and put my Proxmox **hosts** in the VLAN (as well as the servers), and subnet.
+
+There are 2 options with VLANs. Tagged VLANs and Untagged VLANs. This is a new thing to me, but for my uses I tried setting up Tagged VLANs, but at the end of the day it was easier for me to use Untagged VLANs. However this was my first attempt, going for tagged VLANs. **I had mixed results here, and it was difficult to get working consistently** so I would recommend experimenting yourself if you're interested in a tagged VLAN setup.
 
 In my Omada SDN Gateway, I setup a VLAN - I chose 53. (53 looks like SE, the first 2 letters of `server`!)
 
@@ -82,29 +68,74 @@ iface lo inet loopback
 
 iface eno1 inet manual
 
-# All new/modified stuff below here
-
-iface eno1.53 inet manual # The .53 is the VLAN ID
-
-auto vmbr0v53
-iface vmbr0v53 inet static
+# Newer lines below
+auto vmbr0.53
+iface vmbr0.53 inet static
         address 192.168.53.11/24
         gateway 192.168.53.1
-        bridge-ports eno1.53
+
+auto vmbr0
+auto vmbr0 inet manual
+        bridge-ports eno1
         bridge-stp off
         bridge-fd 0
         bridge-vlan-aware yes
-        # If I want to limit VLANs, I can use the line below.
-        # bridge-vids 2-4094
+        bridge-vids 2-4094 # If I want to limit VLANs, I can modify this line with smaller ranges
 ```
 
-Then, I rebooted the node. I did have to iterate and try a few bits and pieces. [The Proxmox docs on VLANs](https://pve.proxmox.com/wiki/Network_Configuration#_vlan_802_1q) weren't that great unfortunately, I didn't find they worked. I'm no expert in this area but some trial and error got me sorted.
+Then, I rebooted the node. I did have to iterate and try a few bits and pieces. [The Proxmox docs on VLANs](https://pve.proxmox.com/wiki/Network_Configuration#_vlan_802_1q) aren't very detailed on these points unfortunately, I didn't find they worked first time but I got it sorted eventually.
 
 Then you need to update the hostname - this can be done by editing the contents of the `/etc/hosts` file and changing the IP of your node/hostname lookup.
 
-I also updated my DNS servers to point at my 2 PiHole servers (1 virtual, 1 on an old Pi). This can be done via the UI
+I also updated my DNS servers to point at my 2 PiHole servers (1 virtual, 1 on an old Pi). This can be done via the UI easily.
 
 {{< figure src="/content/self_hosting/proxmox_dns.png" caption="DNS Servers" >}}
+## Using Untagged VLANs
+
+For my usage, I decided to use Untagged VLANs. I won't go into much detail as I'm no expert on VLANs. However, from what I have read, setting a port on a smart switch to be an Untagged VLAN means that any traffic from the port will be part of the VLAN, but it won't have the VLAN tag in the packets. So to the device, it doesn't really know it's on a VLAN. This is great if your device doesn't support VLANs (which a lot of consumer hardware doesn't). However I could also send VLAN-tagged packets for a different VLAN on the same setup.
+
+This requires setup on my SDN (Software Defined Network). I use an Omada SDN at home.
+
+This is my end point:
+{{< figure src="/content/self_hosting/proxmox_hosts_omada_list.png" caption="Servers in Omada panel after setup" >}}
+
+To get this sorted, I had to SSH onto my devices and set the network settings (modifying `/etc/network/interfaces`) one at a time. This is the same as setting a static IP for any normal network, but for me I'm doing it in the 192.168.53.x range.
+
+```
+auto lo
+iface lo inet loopback
+
+iface eno1 inet manual
+
+auto vmbr0
+iface vmbr0 inet static
+        address 192.168.53.11/24
+        gateway 192.168.53.1
+        bridge-ports eno1
+        bridge-stp off
+        bridge-fd 0
+        bridge-vlan-aware yes
+```
+
+Then, I need to go into my SDN - for me, I clicked on my Jetstream switch - I have the model TL-SG3428XML v1.0 (which is a nice succinct model name...) which is a 24 1 gigabit port, 4 SFP+ port switch with 380W of PoE power (which I am using for cameras, access points and even a Raspberry Pi). It's overkill really, but it works well for my uses.
+
+{{< figure src="/content/self_hosting/proxmox_switch_overview.png" caption="Omada device overview" >}}
+
+Then, I need to go to my ports and change them so that the untagged VLAN on the ports is my Servers VLAN.
+
+I need to change ports 17 through 21 for my 5 Proxmox hosts. For me, I edit the port profile.
+
+{{< figure src="/content/self_hosting/proxmox_switch_ports_tab.png" caption="Selecting port 17" >}}
+
+Then I set my 'Servers' profile.
+
+{{< figure src="/content/self_hosting/proxmox_switch_port17_set_servers_profile.png" caption="Set Servers profile" >}}
+
+This is how my profile is setup - this one was automatically created with my LAN but here is what it looks like anyway; you can clearly see how to set Tagged VLANs if I was interested in that.
+
+{{< figure src="/content/self_hosting/proxmox_servers_profile.png" caption="Servers profile" >}}
+
+{{< figure src="/content/self_hosting/proxmox_servers_lan.png" caption="Servers LAN" >}}
 
 ## Fixing the cluster
 
