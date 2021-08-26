@@ -1,12 +1,12 @@
 ---
-title: "Self Hosting Journey using Proxmox Part 2 - Extra Storage"
+title: "Exposing Self-hosted services via CloudFlare Tunnel"
 date: 2021-08-26T22:41:01+01:00
 tags: ["tech", "self hosting"]
 slug: 'self-hosting-using-cloudflare-tunnel'
 draft: false
 ---
 
-## This article is still in progress of being written.
+# this article is still in progress
 
 I'm self hosting multiple services at home, and in the past my main way of doing this has been to expose port 443 on my home internet, and use Traefik as an SSL terminator and proxy to route to multiple services with different subdomains. It works great, and in general I'd recommend that approach as a way of exposing services if you're happy with the security implications of exposing a port from your home internet connection.
 
