@@ -70,3 +70,20 @@ ingress:
       originServerName: 'roos.click' # This allows my local certificate with roos.click as the hostname to be used to terminate the connection without issues. This is being setup via Traefik
   - service: http_status:404
 ```
+
+Once you set services up, you need to route the tunnel. Run this command for each hostname:
+```bash
+cloudflared tunnel route dns 'ombi_tun' a.roos.click
+```
+
+Install the service:
+```
+sudo cloudflared service install
+```
+
+## Source control
+I store my file in source control - when I make changes I can auto deploy it using a small script that looks like this:
+```bash
+sudo cp ./cloudflared/home_config.yaml /etc/cloudflared/config.yml
+systemctl restart cloudflared
+```
