@@ -6,8 +6,6 @@ slug: 'self-hosting-using-cloudflare-tunnel'
 draft: false
 ---
 
-# this article is still in progress
-
 I'm self hosting multiple services at home, and in the past my main way of doing this has been to expose port 443 on my home internet, and use Traefik as an SSL terminator and proxy to route to multiple services with different subdomains. It works great, and in general I'd recommend that approach as a way of exposing services if you're happy with the security implications of exposing a port from your home internet connection.
 
 However, CloudFlare have a service called [CloudFlare Tunnel](https://www.cloudflare.com/en-gb/products/tunnel/), which works in a different way. The page on CloudFlare's site explains this in a lot of detail, however as a very quick summary essentially CloudFlare becomes a 'middle man' between your home server and the internet. In this case, the home server makes a connection to the CloudFlare server. CloudFlare then use that connection opened from within your internal network to route requests, without needing to have a port exposed. It's a very smart system, and it works in the same way that services such as [ngrok](https://ngrok.com/) and [Inlets](https://docs.inlets.dev/#/) do (both which I've used in the past as well).
@@ -35,7 +33,7 @@ This is super simple. Create a tunnel with the name you want. In this example I'
 cloudflared tunnel create tunnel1
 ```
 
-## 3. Create configuration
+## 4. Create configuration
 
 This is where I needed to customise my configuration for my use cases.
 
@@ -46,7 +44,6 @@ To achieve this, I had to work out how to allow the tunnel to respect my hostnam
 So lets build the file up.
 
 Firstly, we need to set the tunnel name (from the last step) and the credentials file. Your credentials file should have been created when you logged in, and that's the file you should reference in your file in the `.cloudflared` folder, which will probably be in your users home folder.
-
 
 ```yaml
 tunnel: tunnel1
@@ -62,6 +59,8 @@ ingress:
 
 Then in the ingress block, I want to add services. This is where my setup gets complicated.
 
+Lets say I'm hosting a service over HTTPS at the url `a.roos.click`. There are a few options that are set in my service over and above what you might normally see.
+
 ```yaml
 ingress:
   - hostname: a.roos.click # This should match the hostname you want your request to come from on the internet.
@@ -71,19 +70,64 @@ ingress:
   - service: http_status:404
 ```
 
-Once you set services up, you need to route the tunnel. Run this command for each hostname:
-```bash
-cloudflared tunnel route dns 'ombi_tun' a.roos.click
+* `hostname` is the hostname you want your request to come from on the internet.
+* `service` is the destination. For me, I set this to `https://localhost:443`. This is my Traefik instance internally. So Traefik will inspect the `Host` header on the requests and determine which of my internal services to surface.
+* The `originRequest` section allows for configuration of how CloudFlare sends requests to each service. [There is lots of detailed documentation on this here](https://developers.cloudflare.com/cloudflare-one/connections/connect-apps/configuration/ingress#origin-configurations).
+  * I then use `originServerName`. This setting is used to set the expected hostname from the origin server certificate. In my case, it would be `roos.click` (as I am using a wildcard certificate where the hostname is `roos.click` and an alternate subject is `*.roos.click`).
+
+I then define multiple in one file for multiple endpoints. So my configuration file looks a bit like this:
+
+```yaml
+tunnel: tunnel1
+credentials-file: /home/jamie/.cloudflared/<randomguid>.json
+
+ingress:
+  - hostname: a.roos.click
+    service: https://localhost:443
+    originRequest:
+      originServerName: 'roos.click'
+  - hostname: b.roos.click
+    service: https://localhost:443
+    originRequest:
+      originServerName: 'roos.click'
+  - hostname: c.roos.click
+    service: https://localhost:443
+    originRequest:
+      originServerName: 'roos.click'
+  - service: http_status:404
 ```
+
+## 5. Define the tunnel routes
+Once you set services up, you need to route the tunnel. Run the below command for each hostname you want to route through your tunnel.
+
+```bash
+# cloudflared tunnel route dns <tunnel name> <hostname>
+cloudflared tunnel route dns 'tunnel1' a.roos.click
+```
+
+For me, I then setup 2 more for example configuration file above:
+```bash
+cloudflared tunnel route dns 'tunnel1' b.roos.click
+cloudflared tunnel route dns 'tunnel1' c.roos.click
+```
+
+## 6. Install as service
 
 Install the service:
 ```
 sudo cloudflared service install
 ```
 
-## Source control
-I store my file in source control - when I make changes I can auto deploy it using a small script that looks like this:
+## 7. Copy your configuration file
+
+In my case, I am storing my file in source control. When I make changes I run a small script that looks like this from the root of my git repo.
+
 ```bash
+# Copy the configuration from my Git repo to /etc/cloudflared/ as a file called config.yaml
 sudo cp ./cloudflared/home_config.yaml /etc/cloudflared/config.yml
 systemctl restart cloudflared
 ```
+
+## Conclusion
+
+In conclusion, using CloudFlare tunnel to expose services to the internet means you can expose services without worrying about exposing ports directly on your home router to the internet. This tutorial is working well for HTTPS traffic for me, but CloudFlare appears to support many other protocols via this service. I may explore those in future as well.
