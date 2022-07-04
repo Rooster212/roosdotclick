@@ -12,8 +12,8 @@ paginate     = 20
 
   # Subtitle for home
 
-  homeSubtitle = "Lead Developer at the Post Office."
-  homeSubtitle2 = "I love working with AWS, CDK, Serverless Framework, and load of programming languages from Typescript to Golang. I'm passionate about self-hosting, sharing knowledge and improving developer velocity wherever I can."
+  homeSubtitle = "Head of Software Development at ClearCycle."
+  homeSubtitle2 = "I love working with AWS, CDK, Serverless Framework, and programming languages from Typescript to Golang. I'm passionate about self-hosting, sharing knowledge and improving developer velocity wherever I can."
 
   # Set disableReadOtherPosts to true in order to hide the links to other posts.
   disableReadOtherPosts = true

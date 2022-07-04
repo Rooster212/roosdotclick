@@ -11,10 +11,10 @@
 
             <h1>{{ .Site.Title }}</h1>
             {{- with .Site.Params.homeSubtitle }}
-                <p style="font-size: larger;">{{.}}</p>
+                <p style="max-width: 80vw; min-width: 200px; font-size: larger;">{{.}}</p>
             {{- end }}
             {{- with .Site.Params.homeSubtitle2 }}
-                <p style="max-width: 600px; min-width: 500px; margin: 0 auto; padding-bottom: 30px;">{{.}}</p>
+                <p style="max-width: 80vw; min-width: 200px; margin: 0 auto; padding-bottom: 30px;">{{.}}</p>
             {{- end }}
 
             {{- with .Site.Params.social }}
